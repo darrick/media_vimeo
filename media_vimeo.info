@@ -1,0 +1,8 @@
+; $Id$
+
+name = Media: Vimeo
+description = Provides Vimeo support to the Embedded Media Field module.
+package = "Media"
+core = 6.x
+dependencies[] = emfield
+dependencies[] = emvideo
