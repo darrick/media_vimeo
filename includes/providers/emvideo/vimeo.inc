@@ -150,3 +150,28 @@ function emvideo_vimeo_content_generate() {
   );
 }
 
+/**
+ *  Implement hook emvideo_PROVIDER_data_version().
+ */
+function emvideo_vimeo_data_version() {
+  return MEDIA_VIMEO_DATA_VERSION;
+}
+
+/**
+ * Implement hook_emvideo_PROVIDER_data().
+ */
+function emvideo_vimeo_data($field, $item) {
+  return media_vimeo_data($item['value']);
+}
+
+/**
+ * hook emvideo_PROVIDER_duration($item)
+ * Returns the duration of the video in seconds.
+ *  @param $item
+ *    The video item itself, which needs the $data array.
+ *  @return
+ *    The duration of the video in seconds.
+ */
+function emvideo_vimeo_duration($item) {
+  return media_vimeo_duration($item['value']);
+}

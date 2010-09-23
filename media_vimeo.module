@@ -97,6 +97,47 @@ function media_vimeo_video_url($video_code) {
  *  The URL to the thumbnail.
  */
 function media_vimeo_thumbnail_url($video_code) {
+  $data = media_vimeo_data($video_code);
+  if (isset($data['thumbnail_large'])) {
+    return $data['thumbnail_large'];
+  }
+  else if (isset($data['thumbnail_medium'])) {
+    return $data['thumbnail_medium'];
+  }
+  if (isset($data['thumbnail_small'])) {
+    return $data['thumbnail_small'];
+  }
+
+  // Fallback to oembed.
   $xml = emfield_request_xml('vimeo', 'http://vimeo.com/api/oembed.xml?url=http%3A//vimeo.com/'. $video_code, array(), TRUE, FALSE, $video_code);
   return url($xml['OEMBED']['THUMBNAIL_URL'][0]);
+}
+
+/**
+ * Return an array of external metadata provided by Vimeo.
+ *
+ * @param string $video_code
+ *  The Vimeo video ID.
+ *
+ * @return array
+ *  The metadata associated with the video.
+ */
+function media_vimeo_data($video_code) {
+  $url = url('http://vimeo.com/api/v2/video/'. $video_code .'.php');
+  $xml = emfield_request_xml('vimeo', $url, array(), TRUE, FALSE, $video_code, TRUE);
+  return array_pop($xml);
+}
+
+/**
+ * Return the duration of a Vimeo video.
+ *
+ * @param string $video_code
+ *  The Vimeo video ID.
+ *
+ * @return integer
+ *  The duration in seconds.
+ */
+function media_vimeo_duration($video_code) {
+  $data = media_vimeo_data($video_code);
+  return $data['duration'];
 }

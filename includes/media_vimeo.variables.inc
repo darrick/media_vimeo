@@ -27,7 +27,7 @@ define('MEDIA_VIMEO_API_INFO', 'http://vimeo.com/api');
  * we must increment this value, which will allow older content to be updated
  * to the new version automatically.
  */
-define('MEDIA_VIMEO_DATA_VERSION', 1);
+define('MEDIA_VIMEO_DATA_VERSION', 2);
 
 /**
  * These are player defaults. @TODO: Use variable namespace instead.
