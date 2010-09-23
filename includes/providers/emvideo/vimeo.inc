@@ -22,7 +22,7 @@ function emvideo_vimeo_info() {
     array(t('Custom player color'), t('Yes'), t("You may customize the player's skin by choosing your own color.")),
     array(t('Thumbnails'), t('Yes'), t('You may select the size of thumbnail to request from Vimeo.')),
     array(t('Full screen mode'), t('Yes'), t('You may customize the player to enable or disable full screen playback. Full screen mode is enabled by default.')),
-    array(t('Duration'), t('Yes'), t("A video's duration can be displayed using view formatters.'"));
+    array(t('Duration'), t('Yes'), t("A video's duration can be displayed using view formatters.'")),
   );
   return array(
     'provider' => 'vimeo',
@@ -151,3 +151,28 @@ function emvideo_vimeo_content_generate() {
   );
 }
 
+/**
+ *  Implement hook emvideo_PROVIDER_data_version().
+ */
+function emvideo_vimeo_data_version() {
+  return MEDIA_VIMEO_DATA_VERSION;
+}
+
+/**
+ * Implement hook_emvideo_PROVIDER_data().
+ */
+function emvideo_vimeo_data($field, $item) {
+  return media_vimeo_data($item['value']);
+}
+
+/**
+ * hook emvideo_PROVIDER_duration($item)
+ * Returns the duration of the video in seconds.
+ *  @param $item
+ *    The video item itself, which needs the $data array.
+ *  @return
+ *    The duration of the video in seconds.
+ */
+function emvideo_vimeo_duration($item) {
+  return media_vimeo_duration($item['value']);
+}
