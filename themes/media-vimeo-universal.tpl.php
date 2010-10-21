@@ -22,5 +22,5 @@
  */
 ?>
 <?php if ($iframe_url) : ?>
-  <iframe src="<?php print $iframe_url; ?>" width="<?php print $width; ?>" height="<?php print $height; ?>"></iframe>
+  <iframe src="<?php print $iframe_url; ?>" width="<?php print $width; ?>" height="<?php print $height; ?>" frameborder="0"></iframe>
 <?php endif; ?>
