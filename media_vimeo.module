@@ -10,6 +10,13 @@
  * can be entered in Media fields or inline using WYSIWYG.
  */
 
+/* ***************************************** */
+/* INCLUDES                                  */
+/* ***************************************** */
+
+// A registry of variable_get defaults.
+include_once('includes/media_vimeo.variables.inc');
+
 /**
  *  Create stream wrapper for Vimeo videos.
  */
