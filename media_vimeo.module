@@ -1,0 +1,53 @@
+<?php
+// $Id$
+
+/**
+ * @file
+ * The Media: Vimeo module offers support for the Vimeo media provider.
+ *
+ * This module creates a stream wrapper for the Vimeo video provider at
+ * http://vimeo.com/. It also bridges with the Media module, so that videos
+ * can be entered in Media fields or inline using WYSIWYG.
+ */
+
+/**
+ *  Create stream wrapper for Vimeo videos.
+ */
+function media_vimeo_stream_wrappers() {
+  return array(
+    'vimeo' => array(
+      'name' => t('Vimeo videos'),
+      'class' => 'MediaVimeoStreamWrapper',
+      'description' => t('Videos provided by Vimeo.'),
+      'type' => STREAM_WRAPPERS_READ_VISIBLE,
+    ),
+  );
+}
+
+/**
+ *  Implements hook_media_parse().
+ *
+ *  @todo: this might be deprecated now that we have media_internet,
+ *  but the hook is still being called in a couple places in media.
+ */
+function media_vimeo_media_parse($url, $options = array()) {
+  $scheme = 'vimeo://';
+  preg_match('@vimeo\.com/([0-9]+)@', $url, $matches);
+  if (isset($matches[1])) {
+    return file_stream_wrapper_uri_normalize($scheme . 'v/' . $matches[1]);
+  }
+  // @TODO: Validate for malformed vimeo urls.
+}
+
+/**
+ * Implements hook_media_internet_providers();
+ */
+function media_vimeo_media_internet_providers() {
+  $path = drupal_get_path('module', 'media_vimeo');
+  return array(
+    'MediaInternetVimeoHandler' => array(
+      'title' => 'vimeo',
+      'image' => "$path/includes/vimeo-logo.png",
+    ),
+  );
+}
