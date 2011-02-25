@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 /**
  * @file media_vimeo/themes/media_vimeo.theme.inc
