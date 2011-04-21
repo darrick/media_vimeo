@@ -2,39 +2,20 @@
 
 /**
  * @file media_vimeo/includes/media_vimeo.variables.inc
- * Contains the variables and defaults used by Media: Vimeo.
+ * Variable defaults for Media: Vimeo.
  */
 
 /**
- * The variable namespace for Media: Vimeo.
+ * Define our constants.
+ */
+
+/**
+ * This is the variable namespace, automatically prepended to module variables.
  */
 define('MEDIA_VIMEO_NAMESPACE', 'media_vimeo__');
 
 /**
- * This is the main URL for Vimeo.
- */
-define('MEDIA_VIMEO_MAIN_URL', 'http://vimeo.com/');
-
-/**
- * This is the URL to the API of Vimeo.
- */
-define('MEDIA_VIMEO_API_INFO', 'http://vimeo.com/api');
-
-/**
- * This defines the version of the content data array that we serialize
- * in data(). If we change the expected keys of that array,
- * we must increment this value, which will allow older content to be updated
- * to the new version automatically.
- */
-define('MEDIA_VIMEO_DATA_VERSION', 2);
-
-/**
- * These are player defaults. @TODO: Use variable namespace instead.
- */
-define('MEDIA_VIMEO_COLOR_DEFAULT', '#01AAEA');
-
-/**
- * Wrapper for variable_get() that uses the Media: Vimeo variable registry.
+ * Wrapper for variable_get() using the Media: Vimeo variable registry.
  *
  * @param string $name
  *  The variable name to retrieve. Note that it will be namespaced by
@@ -53,17 +34,18 @@ define('MEDIA_VIMEO_COLOR_DEFAULT', '#01AAEA');
  */
 function media_vimeo_variable_get($name, $default = NULL) {
   // Allow for an override of the default.
-  // Useful when a variable is required (like $path), but namespacing still desired.
+  // Useful when a variable is required (like $path), but namespacing is still
+  // desired.
   if (!isset($default)) {
     $default = media_vimeo_variable_default($name);
   }
-  // Namespace all variables
+  // Namespace all variables.
   $variable_name = MEDIA_VIMEO_NAMESPACE . $name;
   return variable_get($variable_name, $default);
 }
 
 /**
- * Wrapper for variable_set() that uses the Media: Vimeo variable registry.
+ * Wrapper for variable_set() using the Media: Vimeo variable registry.
  *
  * @param string $name
  *  The variable name to set. Note that it will be namespaced by
@@ -84,7 +66,7 @@ function media_vimeo_variable_set($name, $value) {
 }
 
 /**
- * Wrapper for variable_del() that uses the Media: Vimeo variable registry.
+ * Wrapper for variable_del() using the Media: Vimeo variable registry.
  *
  * @param string $name
  *  The variable name to delete. Note that it will be namespaced by
@@ -119,16 +101,11 @@ function media_vimeo_variable_default($name = NULL) {
 
   if (!isset($defaults)) {
     $defaults = array(
-      'color_override' => FALSE,
-      'color' => MEDIA_VIMEO_COLOR_DEFAULT,
-      'on_screen_info' => array('portrait', 'title', 'byline'),
-      'full_screen' => 1,
-      'api_key' => '',
-      'api_secret' => '',
-      'thumb_size' => '160',
-      'default_width' => 400,
-      'default_height' => 227,
-      'universal' => TRUE,
+      'width' => 560,
+      'height' =>340,
+      'autoplay' => FALSE,
+      'fullscreen' => TRUE,
+      'preview_uri' => 'vimeo://21869117',
     );
   }
 
