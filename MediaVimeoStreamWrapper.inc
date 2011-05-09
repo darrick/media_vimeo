@@ -22,8 +22,12 @@ class MediaVimeoStreamWrapper extends MediaReadOnlyStreamWrapper {
 
   //@TODO: Check Vimeo URL Path
   function getOriginalThumbnailPath() {
+    $video_properties = array();
+
     $parts = $this->get_parameters();
-    return 'http://img.vimeo.com/vi/'. check_plain($parts['v']) .'/0.jpg';
+    $video_properties = $this->getVideoProperties(check_plain($parts['v']));
+
+    return $video_properties[0]['thumbnail_large'];
   }
 
   function getLocalThumbnailPath() {
@@ -36,4 +40,16 @@ class MediaVimeoStreamWrapper extends MediaReadOnlyStreamWrapper {
     }
     return $local_path;
   }
+
+  /**
+   *  Ref: http://vimeo.com/api/docs/simple-api
+   *  Example of Vimeo simple API 2 request for video properties:
+   *  http://vimeo.com/api/v2/video/xxx.php
+   *  This request returns a serialized array.
+   */
+  function getVideoProperties($video_id) {
+    $response = drupal_http_request($this->base_url . '/api/v2/video/'. $video_id .'.php');
+    return unserialize($response->data);
+  }
+
 }
