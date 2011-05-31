@@ -155,12 +155,12 @@ class MediaVimeoStyles extends FileStyles {
   }
   function video($effect) {
     $variables = array(
-      'uri' => $this->get_uri(),
-      'width' => $this->get_width(),
-      'height' => $this->get_height(),
+      'uri' => $this->getUri(),
+      'width' => $this->getWidth(),
+      'height' => $this->getHeight(),
       'autoplay' => $this->get_autoplay(),
       'fullscreen' => $this->get_fullscreen(),
     );
-    $this->set_output(theme('media_vimeo_video', $variables));
+    $this->setOutput(theme('media_vimeo_video', $variables));
   }
 }
