@@ -4,7 +4,14 @@ description = Provides Vimeo support to the Media module.
 package = "Media"
 core = 7.x
 files[] = media_vimeo.module
-files[] = MediaVimeoStreamWrapper.inc
-files[] = media_vimeo.admin.inc
+
+files[] = includes/MediaVimeoStreamWrapper.inc
+files[] = includes/MediaInternetVimeoHandler.inc
+
 files[] = includes/media_vimeo.styles.inc
+files[] = includes/MediaVimeoStyles.inc
+
 dependencies[] = media_internet
+
+
+
