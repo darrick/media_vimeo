@@ -105,7 +105,7 @@ function media_vimeo_variable_default($name = NULL) {
       'height' =>340,
       'autoplay' => FALSE,
       'fullscreen' => TRUE,
-      'preview_uri' => 'vimeo://21869117',
+      'preview_uri' => 'vimeo://v/21869117',
     );
   }
 
