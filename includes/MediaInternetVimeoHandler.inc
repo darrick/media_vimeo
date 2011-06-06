@@ -8,11 +8,7 @@
 class MediaInternetVimeoHandler extends MediaInternetBaseHandler {
   public function parse($embedCode) {
     $patterns = array(
-      '@vimeo\.com/watch[#\?]v=([^"\& ]+)@i',
-      '@vimeo\.com/embed/([^"\&\? ]+)@i',
-      '@vimeo\.com/v/([^"\&\? ]+)@i',
-      '@vimeo\.com/\?v=([^"\& ]+)@i',
-      '@youtu.be/([^"\&\? ]+)@i',
+      '@vimeo\.com/([^"\& ]+)@i',
     );
     foreach ($patterns as $pattern) {
       preg_match($pattern, $embedCode, $matches);

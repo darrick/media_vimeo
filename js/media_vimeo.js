@@ -50,7 +50,7 @@ Drupal.media_vimeo.insertEmbed = function (embed_id) {
   var src = 'http://player.vimeo.com/video/' + settings.video_id;
 
   // Allow other modules to modify the video settings.
-  settings.options = {wmode : 'opaque'};
+  settings.options.wmode = 'opaque';
   $(window).trigger('media_vimeo_load', settings);
 
   // Merge Vimeo options (such as autoplay) into the source URL.
