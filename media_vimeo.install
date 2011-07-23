@@ -23,3 +23,5 @@ function media_vimeo_uninstall() {
   }
   return array(array('success' => TRUE, 'query' => "Deleted all variables in the Media: Vimeo namespace."));
 }
+
+// adding a comment to force D.O. to reroll dev snapshot
