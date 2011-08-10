@@ -12,7 +12,7 @@ class MediaInternetVimeoHandler extends MediaInternetBaseHandler {
     );
     foreach ($patterns as $pattern) {
       preg_match($pattern, $embedCode, $matches);
-      if (isset($matches[1])) {
+      if (isset($matches[1])  && is_numeric($matches[1])) {
         return file_stream_wrapper_uri_normalize('vimeo://v/' . $matches[1]);
       }
     }
