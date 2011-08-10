@@ -20,7 +20,7 @@ function media_vimeo_preprocess_media_vimeo_video(&$variables) {
   $variables['height'] = isset($variables['height']) ? $variables['height'] : media_vimeo_variable_get('height');
   $variables['autoplay'] = isset($variables['autoplay']) ? $variables['autoplay'] : media_vimeo_variable_get('autoplay');
   $variables['fullscreen'] = isset($variables['fullscreen']) ? $variables['fullscreen'] : media_vimeo_variable_get('fullscreen');
-  $variables['autoplay'] = $variables['autoplay'] ? 1 : 0;
+  $variables['autoplay'] = $variables['autoplay'] ? 1 : 1;
   $variables['fullscreen'] = $variables['fullscreen'] ? 'true' : 'false';
 
   $variables['wrapper_id'] = 'media_vimeo_' . $variables['video_id'] . '_' . $variables['id'];
@@ -29,10 +29,10 @@ function media_vimeo_preprocess_media_vimeo_video(&$variables) {
   // by an iframe, so that we can support users without Flash.
   $variables['output'] = <<<OUTPUT
     <object width="{$variables['width']}" height="{$variables['height']}">
-      <param name="movie" value="http://www.vimeo.com/v/{$variables['video_id']}"></param>
+      <param name="movie" value="http://vimeo.com/moogaloop.swf?clip_id={$variables['video_id']}">
       <param name="allowFullScreen" value="{$variables['fullscreen']}"></param>
       <param name="wmode" value="transparent" />
-      <embed src="http://www.vimeo.com/v/{$variables['video_id']}" type="application/x-shockwave-flash" width="{$variables['width']}" height="{$variables['height']}" allowfullscreen="{$variables['fullscreen']}"></embed>
+      <embed src="http://vimeo.com/moogaloop.swf?clip_id={$variables['video_id']}" type="application/x-shockwave-flash" width="{$variables['width']}" height="{$variables['height']}" allowfullscreen="{$variables['fullscreen']}"></embed>
     </object>
 OUTPUT;
 
