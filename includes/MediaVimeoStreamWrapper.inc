@@ -10,14 +10,26 @@
  *  $vimeo = new ResourceVimeoStreamWrapper('vimeo://v/[video-code]');
  */
 class MediaVimeoStreamWrapper extends MediaReadOnlyStreamWrapper {
-  protected $base_url = 'http://vimeo.com/';
+  static function getMimeType($uri, $mapping = NULL) {
+    return 'video/vimeo';
+  }
+
+  /**
+   * Call the Vimeo Simple API and fetch the video information.
+   *
+   * See http://vimeo.com/api/docs/simple-api
+   *
+   * @return
+   *   Array of properties.
+   */
+  static function getVideoProperties($video_id) {
+    // The .php format returns a serialized array.
+    $response = drupal_http_request('http://vimeo.com/api/v2/video/'. $video_id .'.php');
+    return unserialize($response->data);
+  }
 
   function getTarget($f) {
     return FALSE;
-  }
-
-  static function getMimeType($uri, $mapping = NULL) {
-    return 'video/vimeo';
   }
 
   function getOriginalThumbnailPath() {
@@ -38,16 +50,5 @@ class MediaVimeoStreamWrapper extends MediaReadOnlyStreamWrapper {
       @copy($this->getOriginalThumbnailPath(), $local_path);
     }
     return $local_path;
-  }
-
-  /**
-   *  Ref: http://vimeo.com/api/docs/simple-api
-   *  Example of Vimeo simple API 2 request for video properties:
-   *  http://vimeo.com/api/v2/video/xxx.php
-   *  This request returns a serialized array.
-   */
-  function getVideoProperties($video_id) {
-    $response = drupal_http_request($this->base_url . '/api/v2/video/'. $video_id .'.php');
-    return unserialize($response->data);
   }
 }
