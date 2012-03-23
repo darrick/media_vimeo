@@ -33,17 +33,12 @@ class MediaVimeoStreamWrapper extends MediaReadOnlyStreamWrapper {
   }
 
   function getOriginalThumbnailPath() {
-    $video_properties = array();
-
-    $parts = $this->get_parameters();
-    $video_properties = $this->getVideoProperties(check_plain($parts['v']));
-
+    $video_properties = self::getVideoProperties($this->parameters['v']);
     return $video_properties[0]['thumbnail_large'];
   }
 
   function getLocalThumbnailPath() {
-    $parts = $this->get_parameters();
-    $local_path = 'public://media-vimeo/' . check_plain($parts['v']) . '.jpg';
+    $local_path = 'public://media-vimeo/' . intval($this->parameters['v']) . '.jpg';
     if (!file_exists($local_path)) {
       $dirname = drupal_dirname($local_path);
       file_prepare_directory($dirname, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
