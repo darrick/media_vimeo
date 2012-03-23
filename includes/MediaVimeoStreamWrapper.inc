@@ -32,6 +32,10 @@ class MediaVimeoStreamWrapper extends MediaReadOnlyStreamWrapper {
     return FALSE;
   }
 
+  function interpolateUrl() {
+    return 'http://vimeo.com/' . intval($this->parameters['v']);
+  }
+
   function getOriginalThumbnailPath() {
     $video_properties = self::getVideoProperties($this->parameters['v']);
     return $video_properties[0]['thumbnail_large'];
