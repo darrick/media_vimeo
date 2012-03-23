@@ -7,12 +7,18 @@
  */
 class MediaInternetVimeoHandler extends MediaInternetBaseHandler {
   public function parse($embedCode) {
+    // Vimeo has a few URL formats:
+    //   http://vimeo.com/*
+    //   http://vimeo.com/video/*
+    //   http://vimeo.com/groups/*/videos/*
     $patterns = array(
-      '@vimeo\.com/([^"\& ]+)@i',
+      '@vimeo\.com/(\d+)@i',
+      '@vimeo\.com/video/(\d+)@i',
+      '@vimeo\.com/groups/.+/videos/(\d+)@i',
     );
     foreach ($patterns as $pattern) {
       preg_match($pattern, $embedCode, $matches);
-      if (isset($matches[1])  && is_numeric($matches[1])) {
+      if (isset($matches[1])) {
         return file_stream_wrapper_uri_normalize('vimeo://v/' . $matches[1]);
       }
     }
