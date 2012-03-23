@@ -34,7 +34,13 @@ class MediaInternetVimeoHandler extends MediaInternetBaseHandler {
     $uri = $this->parse($this->embedCode);
     //@todo: this is terribly broken in some ways because the function is really
     // made for local files which are 'real'
-    return file_uri_to_object($uri);
+    $file = file_uri_to_object($uri, TRUE);
+
+    // Try to default the file name to the video's title.
+    if (empty($file->fid) && $info = $this->getOEmbed()) {
+      $file->filename = truncate_utf8($info['title'], 255);
+    }
+    return $file;
   }
 
   /**
@@ -73,7 +79,9 @@ class MediaInternetVimeoHandler extends MediaInternetBaseHandler {
   public function getOEmbed() {
     $uri = $this->parse($this->embedCode);
     $external_url = drupal_realpath($uri);
-    $oembed_url = url('http://www.vimeo.com/oembed', array('query' => array('url' => $external_url, 'format' => 'json')));
+    $oembed_url = url('http://vimeo.com/api/oembed.json', array(
+      'query' => array('url' => $external_url))
+    );
     $response = drupal_http_request($oembed_url);
     if (!isset($response->error)) {
       return drupal_json_decode($response->data);
