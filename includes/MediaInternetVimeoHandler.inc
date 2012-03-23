@@ -38,7 +38,9 @@ class MediaInternetVimeoHandler extends MediaInternetBaseHandler {
   }
 
   /**
-   * Returns information about the media. See http://video.search.yahoo.com/mrss.
+   * Returns information about the media.
+   *
+   * See http://video.search.yahoo.com/mrss
    *
    * @return
    *   If ATOM+MRSS information is available, a SimpleXML element containing
@@ -59,7 +61,9 @@ class MediaInternetVimeoHandler extends MediaInternetBaseHandler {
   }
 
   /**
-   * Returns information about the media. See http://www.oembed.com/.
+   * Returns information about the media.
+   *
+   * See http://www.oembed.com/ and https://vimeo.com/api/docs/oembed
    *
    * @return
    *   If oEmbed information is available, an array containing 'title', 'type',
