@@ -10,5 +10,4 @@ files[] = includes/MediaVimeoStyles.inc
 files[] = includes/media_vimeo.formatters.inc
 files[] = includes/media_vimeo.styles.inc
 files[] = includes/media_vimeo.variables.inc
-dependencies[] = media_internet
-
+dependencies[] = media
