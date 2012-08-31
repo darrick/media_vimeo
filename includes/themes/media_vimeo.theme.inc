@@ -10,54 +10,55 @@
  * Preprocess function for theme('media_vimeo_video').
  */
 function media_vimeo_preprocess_media_vimeo_video(&$variables) {
-  // Build the URL for display.
-  $uri = $variables['uri'];
-  $wrapper = file_stream_wrapper_get_instance_by_uri($uri);
+
+  // Build the URI.
+  $wrapper = file_stream_wrapper_get_instance_by_uri($variables['uri']);
   $parts = $wrapper->get_parameters();
   $variables['video_id'] = $parts['v'];
 
-  $wrapper_id = 'media_vimeo_' . $variables['video_id'] . '_' . $variables['id'];
-  $variables['wrapper_id'] = $wrapper_id;
+  // Parse options and build the query string. Only add the option to the query
+  // array if the option value is not default. Be careful, depending on the
+  // wording in media_vimeo.formatters.inc, TRUE may be query=0.
+  // @see http://developer.vimeo.com/player/embedding
+  $query = array();
 
-  // Load defaults and coerce these variables to integers.
-  foreach (array('width', 'height', 'autoplay', 'fullscreen', 'loop', 'portrait', 'title', 'byline') as $key) {
-    $variables[$key] = (int) (isset($variables[$key]) ? $variables[$key] : media_vimeo_variable_get($key));
+  // These queries default to 0. If the option is true, set value to 1.
+  foreach (array('api', 'autoplay', 'loop') as $option) {
+    if ($variables['options'][$option]) {
+      $query[$option] = 1;
+    }
   }
-  $variables['color'] = str_replace('#', '', isset($variables['color']) ? $variables['color'] : media_vimeo_variable_get('color'));
+  // Add a query player ID and identical html ID if js API is set.
+  if ($variables['options']['api']) {
+    $query['player_id'] = drupal_html_id('media-vimeo-' . $variables['video_id']);
+    $variables['api_id_attribute'] = 'id="' . $query['player_id'] . '" ';
+  }
+  else {
+    $variables['api_id_attribute'] = NULL;
+  }
 
-  // Copy the variables that will be encoded into URLs into a sub array.
-  $variables['options'] = array(
-    'api' => $variables['api'],
-    'autoplay' => $variables['autoplay'],
-    'loop' => $variables['loop'],
-    'color' => $variables['color'],
-    'portrait' => $variables['portrait'],
-    'title' => $variables['title'],
-    'byline' => $variables['byline'],
-    'player_id' => $wrapper_id,
-  );
+  // These queries default to 1. If the option is false, set value to 0.
+  foreach (array('portrait', 'title', 'byline') as $option) {
+    if (!$variables['options'][$option]) {
+      $query[$option] = 0;
+    }
+  }
 
-  $url = url('http://player.vimeo.com/video/' . $variables['video_id'], array('query' => array($variables['options'])));
+  // Strings.
+  if (isset($variables['options']['color'])) {
+    $query['color'] = str_replace('#', '', $variables['options']['color']);
+  }
 
-  $variables['output'] = <<<OUTPUT
-    <iframe src="{$url}" width="{$variables['width']}" height="{$variables['height']}" frameborder="0"></iframe>
-OUTPUT;
+  // Non-query options.
+  $protocol = $variables['options']['protocol'];
 
-/* I'm not sure that these are still necessary:
-  // Pass the settings to replace the object tag with an iframe.
-  $settings['media_vimeo'][$wrapper_id] = array(
-    'width' => $variables['width'],
-    'height' => $variables['height'],
-    'video_id' => $variables['video_id'],
-    'fullscreen' => $variables['fullscreen'],
-    'id' => $wrapper_id .'_iframe',
-    'options' => $variables['options'],
-  );
-  drupal_add_js($settings, 'setting');
-  drupal_add_js(drupal_get_path('module', 'media_vimeo') . '/js/media_vimeo.js');
-  drupal_add_css(drupal_get_path('module', 'media_vimeo') . '/css/media_vimeo.css');
-  drupal_add_js(drupal_get_path('module', 'media_vimeo') . '/js/flash_detect_min.js');
-*/
+  // Add some options as their own template variables.
+  foreach (array('width', 'height') as $themevar) {
+    $variables[$themevar] = $variables['options'][$themevar];
+  }
+
+  // Build the iframe URL with options query string.
+  $variables['url'] = url($protocol . 'player.vimeo.com/video/' . $variables['video_id'], array('query' => $query, 'external' => TRUE));
 }
 
 function theme_media_vimeo_field_formatter_styles($variables) {
@@ -107,7 +108,7 @@ function theme_media_vimeo_embed($variables) {
     $wrapper = file_stream_wrapper_get_instance_by_uri($uri);
     $parts = $wrapper->get_parameters();
 
-    $fullscreen_value = $autoplay = 'false';
+    $autoplay = 'false';
     $in_browser = $thumbnail = FALSE;
 
     foreach ($preset['effects'] as $effect) {
@@ -118,9 +119,6 @@ function theme_media_vimeo_embed($variables) {
         case 'resize':
           $width = $effect['data']['width'];
           $height = $effect['data']['height'];
-          break;
-        case 'fullscreen':
-          $fullscreen_value = $effect['data']['fullscreen'] ? 'true' : 'false';
           break;
         case 'thumbnail':
           $thumbnail = $effect['data']['thumbnail'];
@@ -173,7 +171,7 @@ function theme_media_vimeo_embed($variables) {
       }
     }
     else {
-      $output = theme('media_vimeo_video', array('uri' => $uri, 'width' => $width, 'height' => $height, 'autoplay' => ($autoplay == 'true' ? TRUE : NULL), 'fullscreen' => ($fullscreen_value == 'true' ? TRUE : NULL)));
+      $output = theme('media_vimeo_video', array('uri' => $uri, 'width' => $width, 'height' => $height, 'autoplay' => ($autoplay == 'true' ? TRUE : NULL)));
     }
   }
   return $output;

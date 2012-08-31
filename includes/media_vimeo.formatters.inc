@@ -11,22 +11,15 @@ function media_vimeo_file_formatter_info() {
   $formatters['media_vimeo_video'] = array(
     'label' => t('Vimeo Video'),
     'file types' => array('video'),
-    'default settings' => array(
-      'width' => media_vimeo_variable_get('width'),
-      'height' => media_vimeo_variable_get('height'),
-      'preview_uri' => media_vimeo_variable_get('preview_uri'),
-      'api' => media_vimeo_variable_get('api'),
-      'autoplay' => media_vimeo_variable_get('autoplay'),
-      'byline' => media_vimeo_variable_get('byline'),
-      'color' => media_vimeo_variable_get('color'),
-      'fullscreen' => media_vimeo_variable_get('fullscreen'),
-      'loop' => media_vimeo_variable_get('loop'),
-      'portrait' => media_vimeo_variable_get('portrait'),
-      'title' => media_vimeo_variable_get('title'),
-    ),
+    'default settings' => array(),
     'view callback' => 'media_vimeo_file_formatter_video_view',
     'settings callback' => 'media_vimeo_file_formatter_video_settings',
   );
+
+  foreach (array('width', 'height', 'preview_uri', 'api', 'autoplay', 'byline', 'color', 'loop', 'portrait', 'title', 'protocol') as $setting) {
+    $formatters['media_vimeo_video']['default settings'][$setting] = media_vimeo_variable_get($setting);
+  }
+
   $formatters['media_vimeo_image'] = array(
     'label' => t('Vimeo Preview Image'),
     'file types' => array('video'),
@@ -49,10 +42,10 @@ function media_vimeo_file_formatter_video_view($file, $display, $langcode) {
     $element = array(
       '#theme' => 'media_vimeo_video',
       '#uri' => $file->uri,
+      '#options' => array(),
     );
-    $settings = array('width', 'height', 'api' , 'autoplay', 'byline', 'color', 'fullscreen', 'loop', 'portrait', 'title');
-    foreach ($settings as $setting) {
-      $element['#' . $setting] = isset($file->override[$setting]) ? $file->override[$setting] : $display['settings'][$setting];
+    foreach (array('width', 'height', 'api' , 'autoplay', 'byline', 'color', 'loop', 'portrait', 'title', 'protocol') as $setting) {
+      $element['#options'][$setting] = isset($file->override[$setting]) ? $file->override[$setting] : $display['settings'][$setting];
     }
     return $element;
   }
@@ -63,58 +56,102 @@ function media_vimeo_file_formatter_video_view($file, $display, $langcode) {
  */
 function media_vimeo_file_formatter_video_settings($form, &$form_state, $settings) {
   $element = array();
+
   $element['width'] = array(
     '#title' => t('Width'),
     '#type' => 'textfield',
     '#default_value' => $settings['width'],
+    '#element_validate' => array('_vimeo_validate_video_width_and_height'),
   );
   $element['height'] = array(
     '#title' => t('Height'),
     '#type' => 'textfield',
     '#default_value' => $settings['height'],
+    '#element_validate' => array('_vimeo_validate_video_width_and_height'),
   );
+
+  // @see http://developer.vimeo.com/player/embedding
+
+  // Multiple and string options.
+  $element['color'] = array(
+    '#title' => t('Custom video controls color'),
+    '#type' => 'textfield',
+    '#default_value' => $settings['color'],
+    '#description' => t('A 3 or 6 character hex color code'),
+    '#maxlength' => 7,
+    '#size' => 7,
+    '#element_validate' => array('_vimeo_validate_video_color'),
+  );
+  $element['protocol'] = array(
+    '#title' => t('Iframe protocol'),
+    '#type' => 'radios',
+    '#options' => array(
+      'http://' => t('http://'),
+      'https://' => t('https://'),
+      '//' => t('Relative protocol (may fail if content is viewed outside of a web browser, e.g., email and RSS)'),
+    ),
+    '#default_value' => $settings['protocol'],
+    '#description' => t('There may be issues with the player if the iframe protocol and page protocol do not match.'),
+  );
+
+  // Single options.
+  // Note: make sure the positive/negitive language lines up with option
+  // processing in media_vimeo.theme.inc.
   $element['autoplay'] = array(
-    '#title' => t('Play the video automatically on load'),
+    '#title' => t('Autoplay video on load'),
     '#type' => 'checkbox',
     '#default_value' => $settings['autoplay'],
   );
   $element['loop'] = array(
-    '#title' => t('Play the video again when it reaches the end'),
+    '#title' => t('Loop video'),
     '#type' => 'checkbox',
     '#default_value' => $settings['loop'],
   );
-  $element['fullscreen'] = array(
-    '#title' => t('Allow the player to go into fullscreen'),
-    '#type' => 'checkbox',
-    '#default_value' => $settings['fullscreen'],
-  );
-  $element['api'] = array(
-    '#title' => t('Enable the Javascript API'),
-    '#type' => 'checkbox',
-    '#default_value' => $settings['api'],
-  );
-  $element['color'] = array(
-    '#title' => t('Specify the color of the video controls'),
-    '#type' => 'textfield',
-    '#default_value' => $settings['color'],
-  );
-  $element['portrait'] = array(
-    '#title' => t("Show the user's portrait on the video"),
-    '#type' => 'checkbox',
-    '#default_value' => $settings['portrait'],
-  );
   $element['title'] = array(
-    '#title' => t('Show the title on the video'),
+    '#title' => t('Show the video title'),
     '#type' => 'checkbox',
     '#default_value' => $settings['title'],
   );
   $element['byline'] = array(
-    '#title' => t('Show the byline on the video'),
+    '#title' => t('Show the video byline'),
     '#type' => 'checkbox',
     '#default_value' => $settings['byline'],
   );
+  $element['portrait'] = array(
+    '#title' => t("Show the user's portrait"),
+    '#type' => 'checkbox',
+    '#default_value' => $settings['portrait'],
+  );
+  $element['api'] = array(
+    '#title' => t('Enable the <a href="http://developer.vimeo.com/player/js-api">Javascript API</a>'),
+    '#type' => 'checkbox',
+    '#default_value' => $settings['api'],
+    '#description' => t('A required id in the format <code>media-vimeo-{video_id}</code> will be added to each iframe.'),
+  );
 
   return $element;
+}
+
+/**
+ * Validation for width and height.
+ */
+function _vimeo_validate_video_width_and_height($element, &$form_state, $form) {
+
+  // Check if the value is a number with an optional decimal or percentage sign, or "auto".
+  if (!empty($element['#value']) && !preg_match('/^(auto|([0-9]*(\.[0-9]+)?%?))$/', $element['#value'])) {
+    form_error($element, t("The value entered for @dimension is invalid. Please insert a unitless integer for pixels, a percent, or \"auto\". Note that percent and auto may not function correctly depending on the browser and doctype.", array('@dimension' => $element['#title'])));
+  }
+}
+
+/**
+ * Validation for color.
+ */
+function _vimeo_validate_video_color($element, &$form_state, $form) {
+
+  // If the value is set, check if it's a hex color with or without '#'.
+ if (!empty($element['#value']) && !preg_match('/^#?([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/', $element['#value'])) {
+    form_error($element, t("The color value is invalid. Please use a 3 or 6 character hex color code.", array('@dimension' => $element['#title'])));
+  }
 }
 
 /**
@@ -162,13 +199,16 @@ function media_vimeo_file_formatter_image_settings($form, &$form_state, $setting
  * Implements hook_file_default_displays().
  */
 function media_vimeo_file_default_displays() {
-  $default_displays = array();
 
   // Default settings for displaying as a video.
+  $default_displays = array();
+
+  // @todo: Remove Large, rewrite default displays once
+  // http://drupal.org/node/1051090 goes through.
   $default_video_settings = array(
     'media_large' => array(
-      'width' => 480,
-      'height' => 360,
+      'width' => 560,
+      'height' => 315,
       'autoplay' => FALSE,
     ),
     'media_original' => array(

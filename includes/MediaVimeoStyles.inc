@@ -7,19 +7,12 @@
 
 class MediaVimeoStyles extends FileStyles {
   public $autoplay;
-  public $fullscreen;
 
   function getAutoplay() {
     return $this->get('autoplay');
   }
   function setAutoplay($value) {
     return $this->set('autoplay', $value);
-  }
-  function getFullscreen() {
-    return $this->get('fullscreen');
-  }
-  function setFullscreen($value) {
-    return $this->set('fullscreen', $value);
   }
 
   function getImageUri() {
@@ -38,7 +31,6 @@ class MediaVimeoStyles extends FileStyles {
       'width' => $this->getWidth(),
       'height' => $this->getHeight(),
       'autoplay' => $this->getAutoplay(),
-      'fullscreen' => $this->getFullscreen(),
     );
     $this->setOutput(theme('media_vimeo_video', $variables));
   }
