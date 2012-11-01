@@ -83,6 +83,23 @@ function media_vimeo_media_format_form_prepare_alter(&$form, &$form_state, $medi
   }
 }
 
+ /**
+ * Implements hook_file_mimetype_mapping_alter().
+ */
+function media_vimeo_file_mimetype_mapping_alter(&$mapping) {
+  $mapping['mimetypes'][] = 'video/vimeo';
+}
+
+/*
+ * Implements hook_file_default_types_alter().
+ *
+ * Adds the video/vimeo fake mimetype to video files.
+ */
+function media_vimeo_file_default_types_alter(&$types) {
+  $types['video']->mimetypes[] = 'video/vimeo';
+}
+
+
 /**
  * Implements hook_ctools_plugin_api().
  */
