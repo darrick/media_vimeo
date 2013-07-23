@@ -27,7 +27,7 @@ function media_vimeo_media_internet_providers() {
   $path = drupal_get_path('module', 'media_vimeo');
   return array(
     'MediaInternetVimeoHandler' => array(
-      'title' => 'vimeo',
+      'title' => t('Vimeo'),
       'image' => $path . '/images/stream-vimeo.png'
     ),
   );
