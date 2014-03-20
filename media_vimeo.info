@@ -7,5 +7,3 @@ dependencies[] = media_internet
 
 files[] = includes/MediaVimeoStreamWrapper.inc
 files[] = includes/MediaInternetVimeoHandler.inc
-
-configure = admin/config/media/media_flickr
