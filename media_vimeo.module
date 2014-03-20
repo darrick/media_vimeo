@@ -9,9 +9,6 @@
 // Load all Vimeo file formatters.
 require_once dirname(__FILE__) . '/includes/media_vimeo.formatters.inc';
 
-// A registry of variable_get defaults.
-require_once dirname(__FILE__) . '/includes/media_vimeo.variables.inc';
-
 /**
  * Implements hook_media_internet_providers().
  */

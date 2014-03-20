@@ -11,14 +11,22 @@ function media_vimeo_file_formatter_info() {
   $formatters['media_vimeo_video'] = array(
     'label' => t('Vimeo Video'),
     'file types' => array('video'),
-    'default settings' => array(),
+    'default settings' => array(
+      'width' => 640,
+      'height' => 360,
+      'preview_uri' => 'vimeo://v/21869117',
+      'api' => 0,
+      'autoplay' => 0,
+      'byline' => 1,
+      'color' => NULL,
+      'loop' => 0,
+      'portrait' => 1,
+      'title' => 1,
+      'protocol' => 'http://',
+    ),
     'view callback' => 'media_vimeo_file_formatter_video_view',
     'settings callback' => 'media_vimeo_file_formatter_video_settings',
   );
-
-  foreach (array('width', 'height', 'preview_uri', 'api', 'autoplay', 'byline', 'color', 'loop', 'portrait', 'title', 'protocol') as $setting) {
-    $formatters['media_vimeo_video']['default settings'][$setting] = media_vimeo_variable_get($setting);
-  }
 
   $formatters['media_vimeo_image'] = array(
     'label' => t('Vimeo Preview Image'),
@@ -227,7 +235,7 @@ function media_vimeo_file_default_displays() {
     'media_original' => array(
       'width' => 640,
       'height' => 390,
-      'autoplay' => media_vimeo_variable_get('autoplay'),
+      'autoplay' => 0,
     ),
   );
   foreach ($default_video_settings as $view_mode => $settings) {
