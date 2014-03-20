@@ -45,7 +45,7 @@ function media_vimeo_theme($existing, $type, $theme, $path) {
     'media_vimeo_video' => array(
       'variables' => array('uri' => NULL, 'options' => array()),
       'file' => 'media_vimeo.theme.inc',
-      'path' => $path . '/includes/themes',
+      'path' => $path . '/themes',
       'template' => 'media-vimeo-video',
     ),
   );
