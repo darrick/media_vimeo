@@ -61,7 +61,7 @@ class MediaInternetVimeoHandler extends MediaInternetBaseHandler {
    */
   public function getOEmbed() {
     $uri = $this->parse($this->embedCode);
-    $external_url = drupal_realpath($uri);
+    $external_url = file_create_url($uri);
     $oembed_url = url('http://vimeo.com/api/oembed.json', array('query' => array('url' => $external_url)));
     $response = drupal_http_request($oembed_url);
 
