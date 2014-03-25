@@ -60,7 +60,7 @@ function media_vimeo_file_formatter_video_view($file, $display, $langcode) {
     // Fake a default for attributes so the ternary doesn't choke.
     $display['settings']['attributes'] = array();
 
-    foreach (array('width', 'height', 'api' , 'autoplay', 'byline', 'color', 'loop', 'portrait', 'title', 'protocol') as $setting) {
+    foreach (array('width', 'height', 'api' , 'autoplay', 'byline', 'color', 'loop', 'portrait', 'title', 'protocol', 'attributes') as $setting) {
       $element['#options'][$setting] = isset($file->override[$setting]) ? $file->override[$setting] : $display['settings'][$setting];
     }
 
