@@ -52,7 +52,12 @@ function media_vimeo_preprocess_media_vimeo_video(&$variables) {
   }
 
   // Non-query options.
-  $protocol = $variables['options']['protocol'];
+  if ($variables['options']['protocol_specify']) {
+    $protocol = $variables['options']['protocol'];
+  }
+  else {
+    $protocol = '//';
+  }
 
   // Add some options as their own template variables.
   foreach (array('width', 'height') as $themevar) {

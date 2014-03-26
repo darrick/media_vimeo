@@ -23,7 +23,8 @@ function media_vimeo_file_formatter_info() {
       'loop' => 0,
       'portrait' => 1,
       'title' => 1,
-      'protocol' => 'http://',
+      'protocol' => 'https://',
+      'protocol_specify' => FALSE,
     ),
     'view callback' => 'media_vimeo_file_formatter_video_view',
     'settings callback' => 'media_vimeo_file_formatter_video_settings',
@@ -60,7 +61,7 @@ function media_vimeo_file_formatter_video_view($file, $display, $langcode) {
     // Fake a default for attributes so the ternary doesn't choke.
     $display['settings']['attributes'] = array();
 
-    foreach (array('width', 'height', 'api' , 'autoplay', 'byline', 'color', 'loop', 'portrait', 'title', 'protocol', 'attributes') as $setting) {
+    foreach (array('width', 'height', 'api' , 'autoplay', 'byline', 'color', 'loop', 'portrait', 'title', 'protocol', 'protocol_specify', 'attributes') as $setting) {
       $element['#options'][$setting] = isset($file->override[$setting]) ? $file->override[$setting] : $display['settings'][$setting];
     }
 
@@ -99,16 +100,25 @@ function media_vimeo_file_formatter_video_settings($form, &$form_state, $setting
     '#size' => 7,
     '#element_validate' => array('_vimeo_validate_video_color'),
   );
+  $element['protocol_specify'] = array(
+    '#title' => t('Specify an http protocol'),
+    '#type' => 'checkbox',
+    '#default_value' => $settings['protocol_specify'],
+    '#description' => t('An explicit protocol may be neccesary for videos embedded in RSS feeds and emails. If no protocol is specified, iframes will be protocol relative.'),
+  );
   $element['protocol'] = array(
     '#title' => t('Iframe protocol'),
     '#type' => 'radios',
-    '#options' => array(
-      'http://' => t('http://'),
-      'https://' => t('https://'),
-      '//' => t('Relative protocol (may fail if content is viewed outside of a web browser, e.g., email and RSS)'),
-    ),
     '#default_value' => $settings['protocol'],
-    '#description' => t('There may be issues with the player if the iframe protocol and page protocol do not match.'),
+    '#options' => array(
+      'http://' => 'HTTP',
+      'https://' => 'HTTPS',
+    ),
+    '#states' => array(
+      'invisible' => array(
+        ':input[name="displays[media_vimeo_video][settings][protocol_specify]"]' => array('checked' => FALSE),
+      ),
+    ),
   );
 
   // Single options.
