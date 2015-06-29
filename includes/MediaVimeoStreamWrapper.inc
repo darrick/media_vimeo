@@ -40,9 +40,7 @@ class MediaVimeoStreamWrapper extends MediaReadOnlyStreamWrapper {
 
   function getLocalThumbnailPath() {
     $parts = $this->get_parameters();
-    // There's no need to hide thumbnails, always use the public system rather
-    // than file_default_scheme().
-    $local_path = 'public://media-vimeo/' . check_plain($parts['v']) . '.jpg';
+    $local_path = file_default_scheme() . '://media-vimeo/' . check_plain($parts['v']) . '.jpg';
 
     if (!file_exists($local_path)) {
       // getOriginalThumbnailPath throws an exception if there are any errors
