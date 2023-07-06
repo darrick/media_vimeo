@@ -24,12 +24,12 @@ function media_vimeo_preprocess_media_vimeo_video(&$variables) {
 
   // These queries default to 0. If the option is true, set value to 1.
   foreach (array('api', 'autoplay', 'loop') as $option) {
-    if ($variables['options'][$option]) {
+    if (array_key_exists($option, $variables['options'])) {
       $query[$option] = 1;
     }
   }
   // Add a query player ID and identical html ID if js API is set.
-  if ($variables['options']['api']) {
+  if (isset($variables['options']['api'])) {
     $query['player_id'] = drupal_html_id('media-vimeo-' . $variables['video_id']);
     $variables['api_id_attribute'] = 'id="' . $query['player_id'] . '" ';
   }
@@ -38,8 +38,8 @@ function media_vimeo_preprocess_media_vimeo_video(&$variables) {
   }
 
   // These queries default to 1. If the option is false, set value to 0.
-  foreach (array('portrait', 'title', 'byline') as $option) {
-    if (!$variables['options'][$option]) {
+  foreach (array('portrait', 'title', 'byline', 'badge') as $option) {
+    if (empty($variables['options'][$option])) {
       $query[$option] = 0;
     }
   }

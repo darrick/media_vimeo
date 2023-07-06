@@ -60,6 +60,7 @@ class MediaInternetVimeoHandler extends MediaInternetBaseHandler {
     $uri = $this->parse($this->embedCode);
     $video_id = arg(1, file_uri_target($uri));
     $rss_url = url('http://gdata.vimeo.com/feeds/api/videos/' . $video_id, array('query' => array('v' => '2')));
+    dpm($rss_url);
     // @todo Use media_retrieve_xml() once it's upgraded to include elements
     //   from all namespaces, not just the document default namespace.
     $entry = simplexml_load_file($rss_url);
